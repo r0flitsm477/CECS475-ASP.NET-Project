@@ -339,7 +339,6 @@ C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusic
 C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\bin\Microsoft.AI.ServerTelemetryChannel.xml
 C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\bin\Microsoft.AI.Web.xml
-C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.csprojResolveAssemblyReference.cache
 C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.csproj.CoreCompileInputs.cache
 C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.dll
 C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.pdb
