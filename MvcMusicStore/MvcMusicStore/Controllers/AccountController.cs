@@ -1,111 +1,188 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
+using System.Web.Security;
 using MvcMusicStore.Models;
 
 namespace MvcMusicStore.Controllers
 {
     public class AccountController : Controller
     {
-        private AccountDbContext db = new AccountDbContext();
-
-        // GET: Account
-        public ActionResult Index()
+        private void MigrateShoppingCart(string UserName)
         {
-            using (db)
-            {
-                return View(db.userAccount.ToList());
-            }
+            // Associate shopping cart items with logged-in user
+            var cart = ShoppingCart.GetCart(this.HttpContext);
+            cart.MigrateCart(UserName);
+            Session[ShoppingCart.CartSessionKey] = UserName;
         }
 
+        // GET: /Account/LogOn
+        public ActionResult LogOn()
+        {
+            return View();
+        }
+        
+        // POST: /Account/LogOn
+        [HttpPost]
+        public ActionResult LogOn(LogOnModel model, string returnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                if (Membership.ValidateUser(model.UserName, model.Password))
+                {
+                    MigrateShoppingCart(model.UserName);
+
+                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+        
+        // GET: /Account/LogOff
+        public ActionResult LogOff()
+        {
+            FormsAuthentication.SignOut();
+
+            return RedirectToAction("Index", "Home");
+        }
+        
         // GET: /Account/Register
         public ActionResult Register()
         {
             return View();
         }
-
+        
         // POST: /Account/Register
         [HttpPost]
-        public ActionResult Register(UserAccount account)
+        public ActionResult Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                using (AccountDbContext db = new AccountDbContext())
-                {
-                    db.userAccount.Add(account);
-                    db.SaveChanges();
-                }
-                ModelState.Clear();
-                ViewBag.Message = account.Username + " successfully registered!";
-            }
-            return View();
-        }
+                // Attempt to register the user
+                MembershipCreateStatus createStatus;
+                Membership.CreateUser(model.UserName, model.Password, model.Email, "question", "answer", true, null, out createStatus);
 
-        // GET: /Account/Login
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        // POST: /Account/Login
-        [HttpPost]
-        public ActionResult Login(UserAccount user)
-        {
-            using (AccountDbContext db = new AccountDbContext())
-            {
-                var usr = db.userAccount.Where(u => u.Username == user.Username && u.Password == user.Password).FirstOrDefault();
-                if (usr != null)
+                if (createStatus == MembershipCreateStatus.Success)
                 {
-                    Session["UserID"] = usr.UserID.ToString();
-                    Session["Username"] = usr.Username.ToString();
-                    return RedirectToAction("LoggedIn");
+                    MigrateShoppingCart(model.UserName);
+
+                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Username or password is wrong.");
+                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
                 }
             }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+        
+        // GET: /Account/ChangePassword
+        [Authorize]
+        public ActionResult ChangePassword()
+        {
             return View();
         }
         
-        public ActionResult LoggedIn()
+        // POST: /Account/ChangePassword
+        [Authorize]
+        [HttpPost]
+        public ActionResult ChangePassword(ChangePasswordModel model)
         {
-            if (Session["UserID"] != null)
+            if (ModelState.IsValid)
             {
-                return View();
+
+                // ChangePassword will throw an exception rather
+                // than return false in certain failure scenarios.
+                bool changePasswordSucceeded;
+                try
+                {
+                    MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
+                    changePasswordSucceeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
+                }
+                catch (Exception)
+                {
+                    changePasswordSucceeded = false;
+                }
+
+                if (changePasswordSucceeded)
+                {
+                    return RedirectToAction("ChangePasswordSuccess");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                }
             }
-            else
-            {
-                return RedirectToAction("Login");
-            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
         }
         
-        // Delete
-        public ActionResult Delete(int? id)
+        // GET: /Account/ChangePasswordSuccess
+        public ActionResult ChangePasswordSuccess()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserAccount usr = db.userAccount.Find(id);
-            if (usr == null)
-            {
-                return HttpNotFound();
-            }
-            return View(usr);
+            return View();
         }
         
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        #region Status Codes
+        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
-            UserAccount usr = db.userAccount.Find(id);
-            db.userAccount.Remove(usr);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            // See http://go.microsoft.com/fwlink/?LinkID=177550 for
+            // a full list of status codes.
+            switch (createStatus)
+            {
+                case MembershipCreateStatus.DuplicateUserName:
+                    return "User name already exists. Please enter a different user name.";
+
+                case MembershipCreateStatus.DuplicateEmail:
+                    return "A user name for that e-mail address already exists. Please enter a different e-mail address.";
+
+                case MembershipCreateStatus.InvalidPassword:
+                    return "The password provided is invalid. Please enter a valid password value.";
+
+                case MembershipCreateStatus.InvalidEmail:
+                    return "The e-mail address provided is invalid. Please check the value and try again.";
+
+                case MembershipCreateStatus.InvalidAnswer:
+                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
+
+                case MembershipCreateStatus.InvalidQuestion:
+                    return "The password retrieval question provided is invalid. Please check the value and try again.";
+
+                case MembershipCreateStatus.InvalidUserName:
+                    return "The user name provided is invalid. Please check the value and try again.";
+
+                case MembershipCreateStatus.ProviderError:
+                    return "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
+
+                case MembershipCreateStatus.UserRejected:
+                    return "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
+
+                default:
+                    return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
+            }
         }
+        #endregion
     }
 }
