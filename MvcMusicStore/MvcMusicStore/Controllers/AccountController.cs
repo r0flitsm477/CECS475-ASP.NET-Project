@@ -65,7 +65,7 @@ namespace MvcMusicStore.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Username or Password is wrong.");
+                    ModelState.AddModelError("", "Username or password is wrong.");
                 }
             }
             return View();
