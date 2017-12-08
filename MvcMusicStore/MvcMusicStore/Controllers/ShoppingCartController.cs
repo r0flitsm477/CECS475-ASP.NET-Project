@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MvcMusicStore.Models;
-using MvcMusicStore.ViewModel;
+using MvcMusicStore.ViewModels;
 
 namespace MvcMusicStore.Controllers
 {
