@@ -224,7 +224,6 @@ E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStor
 E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\bin\Microsoft.AI.ServerTelemetryChannel.xml
 E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\bin\Microsoft.AI.WindowsServer.xml
 E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\bin\Microsoft.AI.Web.xml
-E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.csprojResolveAssemblyReference.cache
 E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.csproj.CoreCompileInputs.cache
 E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.dll
 E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.pdb
