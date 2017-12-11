@@ -70,6 +70,7 @@ namespace MvcMusicStore.Controllers
                 ItemCount = itemCount,
                 DeleteId = id
             };
+
             return Json(results);
         }
 
