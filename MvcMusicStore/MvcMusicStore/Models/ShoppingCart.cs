@@ -31,8 +31,8 @@ namespace MvcMusicStore.Models
         {
             // Get the matching cart and album instances
             var cartItem = storeDB.Carts.SingleOrDefault(
-           c => c.CartId == ShoppingCartId
-           && c.AlbumId == album.AlbumId);
+            c => c.CartId == ShoppingCartId
+            && c.AlbumId == album.AlbumId);
             if (cartItem == null)
             {
                 // Create a new cart item if no cart item exists

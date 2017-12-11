@@ -32,5 +32,12 @@ namespace MvcMusicStore.Controllers
             var album = storeDB.Albums.Find(id);
             return View(album);
         }
+
+        [ChildActionOnly]
+        public ActionResult GenreMenu()
+        {
+            var genres = storeDB.Genres.ToList();
+            return PartialView(genres);
+        }
     }
 }
