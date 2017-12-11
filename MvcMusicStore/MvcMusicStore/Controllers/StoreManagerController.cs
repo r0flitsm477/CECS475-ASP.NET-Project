@@ -18,8 +18,20 @@ namespace MvcMusicStore.Controllers
         // GET: StoreManager
         public ActionResult Index()
         {
-            var albums = db.Albums.Include(a => a.Artist).Include(a => a.Genre);
-            return View(albums.ToList());
+            if (Session["Username"].ToString() == "admin")
+            {
+                var albums = db.Albums.Include(a => a.Artist).Include(a => a.Genre);
+                return View(albums.ToList());
+            }
+            else
+            {
+                return RedirectToAction("AccessDenied");
+            }
+        }
+
+        public ActionResult AccessDenied()
+        {
+            return View();
         }
 
         // GET: StoreManager/Details/5

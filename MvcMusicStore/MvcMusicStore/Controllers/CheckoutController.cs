@@ -16,7 +16,14 @@ namespace MvcMusicStore.Controllers
 
         public ActionResult AddressAndPayment()
         {
-            return View();
+            if (Session["Username"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("PleaseRegister");
+            }
         }
 
         //
@@ -58,6 +65,11 @@ namespace MvcMusicStore.Controllers
                 //Invalid - redisplay with errors
                 return View(order);
             }
+        }
+
+        public ActionResult PleaseRegister()
+        {
+            return View();
         }
 
         //

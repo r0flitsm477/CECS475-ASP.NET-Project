@@ -342,3 +342,4 @@ C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusic
 C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.dll
 C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.pdb
 E:\School\475\ASP.NET Project\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.csprojResolveAssemblyReference.cache
+C:\Users\Matthew\Documents\GitHub\CECS475-ASP.NET-Project\MvcMusicStore\MvcMusicStore\obj\Debug\MvcMusicStore.csprojResolveAssemblyReference.cache
