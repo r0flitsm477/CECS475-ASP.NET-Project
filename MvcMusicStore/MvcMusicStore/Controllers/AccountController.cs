@@ -99,7 +99,21 @@ namespace MvcMusicStore.Controllers
             {
                 Session["UserID"] = null;
                 Session["Username"] = null;
+                EmptyCart();
+                return RedirectToAction("LoggedOut");
+            }
+        }
+
+        // GET: /Account/LoggedOut
+        public ActionResult LoggedOut()
+        {
+            if (Session["UserID"] == null)
+            {
                 return View();
+            }
+            else
+            {
+                return RedirectToAction("Logout");
             }
         }
 
@@ -135,6 +149,13 @@ namespace MvcMusicStore.Controllers
             var cart = ShoppingCart.GetCart(this.HttpContext);
             cart.MigrateCart(UserName);
             Session[ShoppingCart.CartSessionKey] = UserName;
+        }
+
+        private void EmptyCart()
+        {
+            // Empty cart when user logs out
+            var cart = ShoppingCart.GetCart(this.HttpContext);
+            cart.EmptyCart();
         }
     }
 }
