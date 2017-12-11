@@ -5,7 +5,7 @@ using MvcMusicStore.Models;
 
 namespace MvcMusicStore.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class CheckoutController : Controller
     {
         MusicStoreEntities storeDB = new MusicStoreEntities();

@@ -85,6 +85,24 @@ namespace MvcMusicStore.Controllers
             }
         }
 
+        // GET: /Account/Logout
+        public ActionResult Logout()
+        {
+            return View();
+        }
+
+        // POST: /Account/Logout
+        [HttpPost]
+        public ActionResult Logout(UserAccount user)
+        {
+            using (db)
+            {
+                Session["UserID"] = null;
+                Session["Username"] = null;
+                return View();
+            }
+        }
+
         // GET: Account/Delete/5
         public ActionResult Delete(int? id)
         {
